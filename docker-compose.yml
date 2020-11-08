@@ -15,6 +15,7 @@ services:
     volumes:
       - ./secrets:/secrets
 
+  # https://github.com/confluentinc/kafka-images/tree/master/zookeeper
   zookeeper1:
     image: confluentinc/cp-zookeeper:latest
     env_file:
