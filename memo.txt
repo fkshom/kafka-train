@@ -1,0 +1,3 @@
+
+No serviceName defined in either JAAS or Kafka config (not Kerberos) - Stack Overflow
+https://stackoverflow.com/questions/54989683/no-servicename-defined-in-either-jaas-or-kafka-config-not-kerberos

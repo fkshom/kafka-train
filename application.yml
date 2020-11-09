@@ -1,0 +1,24 @@
+akhq:
+  connections:
+    ssl-dev:
+      properties:
+        bootstrap.servers: "localhost:19092"
+        security.protocol: SASL_SSL
+        sasl.jaas.config: org.apache.kafka.common.security.plain.PlainLoginModule required username="admin" password="admin-secret";
+        java.security.auth.login.config: /secrets/kafka_jaas.conf
+        ssl.truststore.location: /secrets/kafka.truststore.jks
+        ssl.truststore.password: confluent
+        ssl.keystore.type: "JKS"
+        ssl.keystore.location: /secrets/kafka.keystore.jks
+        ssl.keystore.password: confluent
+        ssl.key.password: confluent
+      # schema-registry:
+      #   url: "https://{{host}}.aivencloud.com:12838"
+      #   basic-auth-username: avnadmin
+      #   basic-auth-password: {{password}}
+      #   properties: {}
+      # connect:
+      #   - name: connect-1
+      #     url: "https://{{host}}.aivencloud.com:{{port}}"
+      #     basic-auth-username: avnadmin
+      #     basic-auth-password: {{password}}
