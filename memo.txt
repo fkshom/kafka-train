@@ -1,3 +1,7 @@
 
 No serviceName defined in either JAAS or Kafka config (not Kerberos) - Stack Overflow
 https://stackoverflow.com/questions/54989683/no-servicename-defined-in-either-jaas-or-kafka-config-not-kerberos
+
+Encryption and Authentication with SSL — Confluent Documentation 6.0.0
+https://docs.confluent.io/current/kafka/authentication_ssl.html
+
