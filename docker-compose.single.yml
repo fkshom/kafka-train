@@ -55,10 +55,12 @@ services:
   akhq:
     image: tchiotludo/akhq
     ports:
-      - "8081:8080"
+      - "8080:8080"
     restart: always
     environment:
       KAFKA_OPTS: -Djava.security.auth.login.config=/secrets/kafka_jaas.conf
+      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
+      KAFKA_LISTENER_NAME_INTERNAL_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
     volumes:
       - ./secrets:/secrets
       - ./application.yml:/app/application.yml

@@ -23,7 +23,7 @@ i=kafka
 	# Create keystores
 	keytool -genkey -noprompt \
 				 -alias $i \
-				 -dname "CN=kafka.kafkasecurity_default, OU=TEST, O=CONFLUENT, L=PaloAlto, S=Ca, C=US" \
+				 -dname "CN=localhost, OU=TEST, O=CONFLUENT, L=PaloAlto, S=Ca, C=US" \
 				 -keystore kafka.keystore.jks \
 				 -keyalg RSA \
 				 -storepass confluent \
