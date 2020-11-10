@@ -51,21 +51,38 @@ services:
       - ./secrets:/etc/kafka/secrets
       - ./volumes/kafka1:/var/lib/kafka
 
-  # https://github.com/tchiotludo/akhq
-  akhq:
-    image: tchiotludo/akhq
+  # # https://github.com/tchiotludo/akhq
+  # akhq:
+  #   image: tchiotludo/akhq
+  #   ports:
+  #     - "8080:8080"
+  #   restart: always
+  #   environment:
+  #     KAFKA_OPTS: -Djava.security.auth.login.config=/secrets/kafka_jaas.conf
+  #     KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
+  #     KAFKA_LISTENER_NAME_INTERNAL_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
+  #   volumes:
+  #     - ./secrets:/secrets
+  #     - ./application.yml:/app/application.yml
+  #   network_mode: host
+
+
+  # https://github.com/obsidiandynamics/kafdrop
+  kafkadrop:
+    image: obsidiandynamics/kafdrop
     ports:
-      - "8080:8080"
+      - "9000:9000"
     restart: always
     environment:
-      KAFKA_OPTS: -Djava.security.auth.login.config=/secrets/kafka_jaas.conf
-      KAFKA_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
-      KAFKA_LISTENER_NAME_INTERNAL_SSL_ENDPOINT_IDENTIFICATION_ALGORITHM:
-    volumes:
-      - ./secrets:/secrets
-      - ./application.yml:/app/application.yml
+      KAFKA_BROKERCONNECT: localhost:19092
+      #JVM_OPTS: "-Xms32M -Xmx128M"
+      SERVER_SERVLET_CONTEXTPATH: "/"
+      KAFKA_PROPERTIES: "${KAFKA_PROPERTIES}"
+      KAFKA_TRUSTSTORE: "${KAFKA_TRUSTSTORE}"
+      KAFKA_KEYSTORE: "${KAFKA_KEYSTORE}"
     network_mode: host
-
+    volumes:
+      - ./secrets:/etc/kafka/secrets
  # Management
  
 #   # Kafka burrow
