@@ -83,6 +83,27 @@ services:
     network_mode: host
     volumes:
       - ./secrets:/etc/kafka/secrets
+
+  # https://github.com/yahoo/CMAK
+  # https://github.com/hleb-albau/kafka-manager-docker
+  cmak:
+    image: hlebalbau/kafka-manager
+    ports:
+      - "9000:9000"
+    restart: always
+    environment:
+      ZK_HOSTS: "localhost:22181"
+      APPLICATION_SECRET: "random-secret"
+      KAFKA_MANAGER_AUTH_ENABLED: "false"
+      KAFKA_MANAGER_USERNAME: username
+      KAFKA_MANAGER_PASSWORD: password
+      CONSUMER_PROPERTIES_FILE: /cmak/conf/consumer.properties
+      JAVA_OPTS: "-Djavax.net.ssl.trustStore=/secrets/kafka.truststore.jks -Djavax.net.ssl.trustStorePassword=confluent -Djavax.net.ssl.keyStore=/secrets/kafka.keystore.jks -Djavax.net.ssl.keyStorePassword=confluent  -Djavax.net.ssl.keyPassword=confluent"
+    volumes:
+      - ./secrets:/secrets
+      - ./consumer.properties:/cmak/conf/consumer.properties
+    network_mode: host
+        
  # Management
  
 #   # Kafka burrow
