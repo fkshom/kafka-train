@@ -1,4 +1,4 @@
-from kafka import KafkaProducer, KafkaAdminClient
+from kafka import KafkaProducer, KafkaAdminClient, NewTopic
 import ssl
 
 ssl_context = ssl.SSLContext(ssl.PROTOCOL_TLS)
