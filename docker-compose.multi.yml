@@ -1,0 +1,252 @@
+version: '2.1'
+
+# Kafka周りの開発・テストに便利なツールをdocker-composeにまとめました - Qiita
+# https://qiita.com/tarosaiba/items/b3d1c49c2cc5e773babf
+
+# https://github.com/llofberg/kafka-sasl-opa
+
+# Docker Image Reference — Confluent Documentation 6.0.0
+# https://docs.confluent.io/current/installation/docker/image-reference.html#image-reference
+services:
+  # https://github.com/confluentinc/kafka-images/tree/master/zookeeper
+  zookeeper1:
+    image: confluentinc/cp-zookeeper:latest
+    env_file:
+      - ./zookeeper.env
+    environment:
+      ZOOKEEPER_SERVER_ID: 1
+      ZOOKEEPER_CLIENT_PORT: 22181
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+    network_mode: host
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+      - ./volumes/zookeeper1:/var/lib/zookeeper
+  
+  zookeeper2:
+    image: confluentinc/cp-zookeeper:latest
+    env_file:
+      - ./zookeeper.env
+    environment:
+      ZOOKEEPER_SERVER_ID: 2
+      ZOOKEEPER_CLIENT_PORT: 32181
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+    network_mode: host
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+      - ./volumes/zookeeper2:/var/lib/zookeeper
+  
+  zookeeper3:
+    image: confluentinc/cp-zookeeper:latest
+    env_file:
+      - ./zookeeper.env
+    environment:
+      ZOOKEEPER_SERVER_ID: 3
+      ZOOKEEPER_CLIENT_PORT: 42181
+      ZOOKEEPER_SERVERS: localhost:22888:23888;localhost:32888:33888;localhost:42888:43888
+    network_mode: host
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+      - ./volumes/zookeeper3:/var/lib/zookeeper
+ 
+  kafka1:
+    image: confluentinc/cp-kafka:latest
+    network_mode: host
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    env_file: 
+      - ./kafka.env
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:19092
+    ports:
+      - "19092:19092"
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+      - ./volumes/kafka1:/var/lib/kafka
+  
+  kafka2:
+    image: confluentinc/cp-kafka:latest
+    network_mode: host
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    env_file: 
+      - ./kafka.env
+    environment:
+      KAFKA_BROKER_ID: 2
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:29092
+    ports:
+      - "29092:29092"
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+      - ./volumes/kafka2:/var/lib/kafka
+  
+  kafka3:
+    image: confluentinc/cp-kafka:latest
+    network_mode: host
+    depends_on:
+      - zookeeper1
+      - zookeeper2
+      - zookeeper3
+    env_file: 
+      - ./kafka.env
+    environment:
+      KAFKA_BROKER_ID: 3
+      KAFKA_ZOOKEEPER_CONNECT: localhost:22181,localhost:32181,localhost:42181
+      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:39092
+    ports:
+      - "39092:39092" 
+    extra_hosts:
+      - "moby:127.0.0.1"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+      - ./volumes/kafka3:/var/lib/kafka
+
+  keytool:
+    build:
+      context: .
+      dockerfile: Dockerfile.keytool
+    volumes:
+      - ./secrets:/secrets
+
+ # Management
+ 
+  # https://github.com/tchiotludo/akhq
+  akhq:
+    image: tchiotludo/akhq
+    ports:
+      - "8081:8080"
+    restart: always
+    environment:
+      KAFKA_OPTS: -Djava.security.auth.login.config=/secrets/kafka_jaas.conf
+    volumes:
+      - ./secrets:/secrets
+      - ./application.yml:/app/application.yml
+    network_mode: host
+
+
+  # https://github.com/obsidiandynamics/kafdrop
+  kafkadrop:
+    image: obsidiandynamics/kafdrop
+    ports:
+      - "9001:9000"
+    restart: always
+    environment:
+      KAFKA_BROKERCONNECT: localhost:19092
+      JVM_OPTS: "-Xms32M -Xmx64M"
+      SERVER_SERVLET_CONTEXTPATH: "/"
+      KAFKA_PROPERTIES: "${KP}"
+    network_mode: host
+      
+
+  # Kafka burrow
+  # https://github.com/tarosaiba/kafka-burrow
+  # https://github.com/linkedin/Burrow
+  kafka-burrow:
+    image: tarosaiba/kafka-burrow:latest
+    ports:
+      - "8888:8000"
+    restart: always
+    environment:
+      KAFKA_SERVER: kafka3:19092
+      ZOOKEEPER_SERVER: localhost:22181
+    network_mode: host
+    depends_on:
+      - "kafka1"
+      - "kafka2"
+      - "kafka3"
+      - "zookeeper1"
+      - "zookeeper2"
+      - "zookeeper3"
+ 
+  # Kafka rest
+  # https://github.com/confluentinc/kafka-rest-images
+  kafkarest:
+    image: confluentinc/cp-kafka-rest:4.0.0
+    container_name: kafkarest
+    env_file: 
+      - kafkarest.env
+    environment:
+      AKAFKA_REST_ZOOKEEPER_CONNECT: "localhost:22181"
+      KAFKA_REST_BOOTSTRAP_SERVERS: "localhost:19092"
+      KAFKA_REST_HOST_NAME: "kafkarest"
+      KAFKA_REST_LISTENERS: "http://localhost:8082"
+      AKAFKA_REST_CLIENT_SASL_JAAS_CONFIG: |
+        org.apache.kafka.common.security.plain.PlainLoginModule required \
+        username="kafkarest" \
+        password="kafkarest";
+      KAFKA_REST_CLIENT_SASL_MECHANISM: "PLAIN"
+      KAFKA_REST_CLIENT_SECURITY_PROTOCOL: "SASL_SSL"
+    network_mode: host
+    depends_on:
+      - "kafka1"
+      - "kafka2"
+      - "kafka3"
+      - "zookeeper1"
+      - "zookeeper2"
+      - "zookeeper3"
+    volumes:
+      - ./secrets:/etc/kafka/secrets
+  
+ ## Kafka topi ui
+  kafka-topic-ui:
+    image: landoop/kafka-topics-ui:0.9.3
+    environment:
+      KAFKA_REST_PROXY_URL: "http://localhost:8082"
+      PROXY: "true"
+    network_mode: host
+    ports:
+      - "8000:8000"
+    depends_on:
+      - "kafkarest"
+ 
+  # # Kafka trifecta
+  # # https://github.com/ldaniels528/trifecta
+  # kafka-trifecta:
+  #   image: janschultecom/docker-trifecta:latest
+  #   environment:
+  #     ZK_HOST: "localhost:22181"
+  #   ports:
+  #     - "9000:9000"
+  #   network_mode: host
+  #   depends_on:
+  #     - "kafka1"
+  #     - "kafka2"
+  #     - "kafka3"
+  #     - "zookeeper1"
+  #     - "zookeeper2"
+  #     - "zookeeper3"
+ 
+  # # Kafka manager
+  # # https://github.com/sheepkiller/kafka-manager-docker
+  # kafka-manager:
+  #   image: sheepkiller/kafka-manager
+  #   environment:
+  #     ZK_HOSTS: "localhost:22181"
+  #     APPLICATION_SECRET: "letmein"
+  #   ports:
+  #     - "9090:9000"
+  #   network_mode: host
+  #   depends_on:
+  #     - "kafka1"
+  #     - "kafka2"
+  #     - "kafka3"
+  #     - "zookeeper1"
+  #     - "zookeeper2"
+  #     - "zookeeper3"
+ 

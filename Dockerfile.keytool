@@ -1,5 +1,5 @@
 FROM openjdk:alpine
 RUN apk upgrade --update-cache --available && \
-    apk add openssl && \
+    apk add openssl bash && \
     rm -rf /var/cache/apk/*
 
