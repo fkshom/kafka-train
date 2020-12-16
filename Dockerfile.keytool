@@ -3,3 +3,4 @@ RUN apk upgrade --update-cache --available && \
     apk add openssl bash && \
     rm -rf /var/cache/apk/*
 
+WORKDIR /work
