@@ -84,7 +84,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 1
       KAFKA_ZOOKEEPER_CONNECT: localhost:12181
-      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:19092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:19092
     network_mode: host
     depends_on:
       - zookeeper1
@@ -99,7 +99,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 2
       KAFKA_ZOOKEEPER_CONNECT: localhost:22181
-      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:29092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:29092
     network_mode: host
     depends_on:
       - zookeeper2
@@ -114,7 +114,7 @@ services:
     environment:
       KAFKA_BROKER_ID: 3
       KAFKA_ZOOKEEPER_CONNECT: localhost:32181
-      KAFKA_ADVERTISED_LISTENERS: SASL_SSL://localhost:39092
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:39092
     network_mode: host
     depends_on:
       - zookeeper3
