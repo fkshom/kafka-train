@@ -96,10 +96,10 @@ kafka = Kafka.new(brokers, client_id: "my-application",
 # pp kafka.topics
 #pp kafka.groups
 # pp kafka.brokers
-kafka.deliver_message("Hello, World!", topic: "greetings")
+#kafka.deliver_message("Hello, World!", topic: "greetings")
 #pp kafka.describe_topic(kafka.topics[0], nil)
 #binding.pry
-#config = kafka.describe_configs(1, nil)
+config = kafka.describe_configs(1, nil)
 #pp kafka.describe_group(kafka.groups[0])
 
 

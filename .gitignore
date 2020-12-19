@@ -1,3 +1,4 @@
 /volumes/*
 /vendor/*
 /.bundle/*
+/.venv/*

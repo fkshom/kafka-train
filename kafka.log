@@ -2234,3 +2234,26 @@ D, [2020-12-19T22:34:26.509244 #55536] DEBUG -- : [describe_configs_api] Opening
 D, [2020-12-19T22:34:26.510043 #55536] DEBUG -- : [describe_configs_api] Sending describe_configs_api API request 1 to localhost:19092
 D, [2020-12-19T22:34:26.510453 #55536] DEBUG -- : [describe_configs_api] Waiting for response 1 from localhost:19092
 D, [2020-12-19T22:34:26.524518 #55536] DEBUG -- : [describe_configs_api] Received response 1 from localhost:19092
+I, [2020-12-19T22:59:16.476855 #361427]  INFO -- : Fetching cluster metadata from kafka://localhost:29092
+D, [2020-12-19T22:59:16.477255 #361427] DEBUG -- : [topic_metadata] Opening connection to localhost:29092 with client id my-application...
+D, [2020-12-19T22:59:16.479039 #361427] DEBUG -- : [topic_metadata] Sending topic_metadata API request 1 to localhost:29092
+D, [2020-12-19T22:59:16.479759 #361427] DEBUG -- : [topic_metadata] Waiting for response 1 from localhost:29092
+D, [2020-12-19T22:59:16.779485 #361427] DEBUG -- : [topic_metadata] Closing socket to localhost:29092
+D, [2020-12-19T22:59:16.780175 #361427] DEBUG -- : Closing socket to localhost:29092
+E, [2020-12-19T22:59:16.780394 #361427] ERROR -- : Failed to fetch metadata from kafka://localhost:29092: Connection error EOFError: EOFError
+I, [2020-12-19T23:00:51.592533 #363104]  INFO -- : Fetching cluster metadata from kafka://localhost:29092
+D, [2020-12-19T23:00:51.593010 #363104] DEBUG -- : [topic_metadata] Opening connection to localhost:29092 with client id my-application...
+E, [2020-12-19T23:00:51.596057 #363104] ERROR -- : [topic_metadata] Failed to connect to localhost:29092: Connection refused - connect(2) for 127.0.0.1:29092
+D, [2020-12-19T23:00:51.596210 #363104] DEBUG -- : Closing socket to localhost:29092
+E, [2020-12-19T23:00:51.596369 #363104] ERROR -- : Failed to fetch metadata from kafka://localhost:29092: Connection refused - connect(2) for 127.0.0.1:29092
+I, [2020-12-19T23:02:15.489030 #365098]  INFO -- : Fetching cluster metadata from kafka://localhost:29092
+D, [2020-12-19T23:02:15.489313 #365098] DEBUG -- : [topic_metadata] Opening connection to localhost:29092 with client id my-application...
+D, [2020-12-19T23:02:15.490210 #365098] DEBUG -- : [topic_metadata] Sending topic_metadata API request 1 to localhost:29092
+D, [2020-12-19T23:02:15.490793 #365098] DEBUG -- : [topic_metadata] Waiting for response 1 from localhost:29092
+D, [2020-12-19T23:02:15.529739 #365098] DEBUG -- : [topic_metadata] Received response 1 from localhost:29092
+I, [2020-12-19T23:02:15.530225 #365098]  INFO -- : Discovered cluster metadata; nodes: localhost:29092 (node_id=2), localhost:39092 (node_id=3), localhost:19092 (node_id=1)
+D, [2020-12-19T23:02:15.530439 #365098] DEBUG -- : Closing socket to localhost:29092
+D, [2020-12-19T23:02:15.531170 #365098] DEBUG -- : [describe_configs_api] Opening connection to localhost:19092 with client id my-application...
+D, [2020-12-19T23:02:15.532285 #365098] DEBUG -- : [describe_configs_api] Sending describe_configs_api API request 1 to localhost:19092
+D, [2020-12-19T23:02:15.532986 #365098] DEBUG -- : [describe_configs_api] Waiting for response 1 from localhost:19092
+D, [2020-12-19T23:02:15.608534 #365098] DEBUG -- : [describe_configs_api] Received response 1 from localhost:19092
