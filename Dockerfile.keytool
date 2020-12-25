@@ -1,6 +1,8 @@
 FROM openjdk:alpine
 RUN apk upgrade --update-cache --available && \
-    apk add openssl bash && \
+    apk add openssl bash python3 && \
     rm -rf /var/cache/apk/*
+
+RUN pip3 install --upgrade pip && pip3 install pyyaml
 
 WORKDIR /work

@@ -12,7 +12,7 @@ class dict2(dict):
         self.__dict__ = self 
 
 def run_command(command):
-    subprocess.run(shlex.split("echo " + command))
+    subprocess.run(shlex.split(command))
 
 def load_config(filepath):
     with open(filepath, 'r') as f:
@@ -57,6 +57,22 @@ def command_cert(args):
             f" -storepass {certconfig.keystorepass}"
             f" -keypass {certconfig.sslkeypass}"
         )
+        with open('/tmp/ssl.conf', 'w') as f:
+            import textwrap
+            f.write(textwrap.dedent("""
+            [SAN]
+            subjectAltName=@alt_names
+            basicConstraints=CA:FALSE
+            [alt_names]
+            """))
+            for index, dns in enumerate(certconfig.dns):
+                f.write(f"DNS.{index+1}={dns}\n")
+            for index, ip in enumerate(certconfig.ip):
+                f.write(f"IP.{index+1}={ip}\n")
+        
+        with open('/tmp/ssl.conf', 'r') as f:
+            print(f.read())
+
         run_command(
             f"openssl x509 -req"
             f" -CA {caconfig.name}.crt"
@@ -66,6 +82,7 @@ def command_cert(args):
             f" -days 9999"
             f" -CAcreateserial"
             f" -passin pass:{caconfig.password}"
+            f" -extensions SAN -extfile /tmp/ssl.conf"
         )
         run_command(
             f"keytool -import -noprompt"
