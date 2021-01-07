@@ -1,8 +1,6 @@
 - hostname: kafka
   dname: CN=Unknown, OU=TEST, O=CONFLUENT, L=PaloAlto, S=Ca, C=US
-  truststorepass: confluent
-  keystorepass: confluent
-  sslkeypass: confluent
+  password: confluent
   dns:
   - localhost
   ip:
@@ -11,9 +9,6 @@
 
 # - hostname: hostname1
 #   dname: CN=localhost, OU=TEST, O=CONFLUENT, L=PaloAlto, S=Ca, C=US
-#   truststorepass: confluent
-#   keystorepass: confluent
-#   sslkeypass: confluent
 #   dns:
 #   - localhost
 #   ip:

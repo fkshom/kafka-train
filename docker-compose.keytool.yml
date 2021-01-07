@@ -1,0 +1,19 @@
+version: '2.1'
+
+# Kafka周りの開発・テストに便利なツールをdocker-composeにまとめました - Qiita
+# https://qiita.com/tarosaiba/items/b3d1c49c2cc5e773babf
+
+# https://github.com/llofberg/kafka-sasl-opa
+
+# Docker Image Reference — Confluent Documentation 6.0.0
+# https://docs.confluent.io/current/installation/docker/image-reference.html#image-reference
+services:
+  keytool:
+    build:
+      context: .
+      dockerfile: Dockerfile.keytool
+    volumes:
+      - ./script:/script
+      - ./ssl:/ssl
+      - ./config:/config
+

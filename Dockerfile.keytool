@@ -5,4 +5,4 @@ RUN apk upgrade --update-cache --available && \
 
 RUN pip3 install --upgrade pip && pip3 install pyyaml
 
-WORKDIR /work
+WORKDIR /script
